@@ -5,6 +5,11 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import java.util.*;
 
+/**
+ * This class represents a User in the system.
+ * Users can have different roles (Admin, Doctor, Patient).
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

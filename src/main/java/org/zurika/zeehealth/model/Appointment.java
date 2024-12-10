@@ -7,6 +7,11 @@ import org.zurika.zeehealth.validation.CreateValidationGroup;
 
 import java.time.*;
 
+/**
+ * The Appointment class represents a scheduled appointment between a patient and a doctor.
+ * It includes information about the patient, doctor, appointment date, and status.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -15,6 +15,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * This controller handles appointment-related functionalities,
+ * including booking, rescheduling, and viewing appointments.
+ */
+
 @Controller
 @RequestMapping("/appointments")
 public class AppointmentController {

@@ -8,6 +8,12 @@ import org.zurika.zeehealth.model.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * The AppointmentRepository interface provides methods for interacting with the database
+ * to perform CRUD operations on Appointment entities. It extends JpaRepository to leverage
+ * built-in methods and supports custom query methods for specific requirements.
+ */
+
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     List<Appointment> findByStatus(AppointmentStatus status);

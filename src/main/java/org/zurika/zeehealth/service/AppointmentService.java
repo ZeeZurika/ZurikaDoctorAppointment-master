@@ -9,6 +9,11 @@ import org.zurika.zeehealth.repository.*;
 import java.time.*;
 import java.util.*;
 
+/**
+ * Service layer for managing appointment-related operations. This class contains
+ * business logic for creating, retrieving, updating, and managing appointments.
+ */
+
 @Service
 public class AppointmentService {
 
