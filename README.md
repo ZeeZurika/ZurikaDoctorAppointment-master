@@ -1,6 +1,6 @@
 # **PerScholas Capstone Hospital - Doctor Appointment Booking System**
 
-##### GitHub Link:
+##### GitHub Link: https://github.com/ZeeZurika/ZurikaDoctorAppointment-master.git
 
 ### **Table of Contents**
 * Overview
@@ -22,7 +22,7 @@ providing functionalities like appointment booking, user role-based dashboards, 
 #### **User Roles:**
 
 * Admin: Manage users, appointments, and system settings.
-* Doctor: View and manage appointments, update appointment statuses.
+* Doctor: View and manage appointments, and update appointment statuses.
 * Patient: Book, view, and manage appointments.
 
 #### **Authentication and Authorization:**
