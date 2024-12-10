@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/navigation :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<div th:insert="~{fragments/navigation :: banner}"></div>
+<div th:insert="~{fragments/navigation :: navbar}"></div>
+
+<div class="container mt-5">
+    <h1>Admin Dashboard</h1>
+
+    <!-- Success/Error Messages -->
+    <div th:if="${successMessage}" class="alert alert-success">
+        <span th:utext="${successMessage}"></span>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Tabs for Admin Dashboard -->
+    <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" id="manageUsersTab" data-bs-toggle="tab" href="#manageUsers" role="tab"
+               th:classappend="${activeTab == 'manageUsers'} ? 'active' : ''">Manage Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="appointmentsTab" data-bs-toggle="tab" href="#appointments" role="tab"
+               th:classappend="${activeTab == 'appointments'} ? 'active' : ''">Appointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="reportsTab" data-bs-toggle="tab" href="#reports" role="tab"
+               th:classappend="${activeTab == 'reports'} ? 'active' : ''">Reports</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="adminTabsContent">
+        <!-- Manage Users Tab -->
+        <div class="tab-pane fade" id="manageUsers" role="tabpanel"
+             th:classappend="${activeTab == 'manageUsers'} ? 'show active'">
+            <h2>Manage Users</h2>
+            <form action="/admin/addUser" method="post" class="mb-4">
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="username" placeholder="Username" required>
+                </div>
+                <div class="mb-3">
+                    <input type="email" class="form-control" name="email" placeholder="Email" required>
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="firstName" placeholder="First Name" required>
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="lastName" placeholder="Last Name" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" name="password" placeholder="Password" required>
+                </div>
+                <div class="mb-3">
+                    <select class="form-select" name="role" required>
+                        <option value="" disabled selected>Select Role</option>
+                        <option value="ADMIN">Admin</option>
+                        <option value="DOCTOR">Doctor</option>
+                        <option value="PATIENT">Patient</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add User</button>
+            </form>
+
+            <h4>Current Users</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.role}"></td>
+                    <td>
+                        <form action="/admin/deleteUser" method="post" style="display: inline;">
+                            <input type="hidden" name="id" th:value="${user.id}">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Appointments Tab -->
+        <div class="tab-pane fade" id="appointments" role="tabpanel"
+             th:classappend="${activeTab == 'appointments'} ? 'show active'">
+            <h2>Appointments</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="appointment : ${appointments}">
+                    <td th:text="${appointment.id}"></td>
+                    <td th:text="${appointment.patient.firstName} + ' ' + ${appointment.patient.lastName}"></td>
+                    <td th:text="${appointment.doctor.firstName} + ' ' + ${appointment.doctor.lastName}"></td>
+                    <td th:text="${appointment.appointmentDate}"></td>
+                    <td th:text="${appointment.status}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Reports Tab -->
+        <div class="tab-pane fade" id="reports" role="tabpanel"
+             th:classappend="${activeTab == 'reports'} ? 'show active'">
+            <h2>Generate Reports</h2>
+            <form action="/admin/generateReport" method="post">
+                <input type="hidden" name="activeTab" value="reports">
+                <div class="mb-3">
+                    <select class="form-select" name="reportType">
+                        <option value="appointments-by-patient">Appointments by Patient</option>
+                        <option value="appointments-by-doctor">Appointments by Doctor</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Generate</button>
+            </form>
+        </div>
+    </div>
+</div>
+<br><br><br>
+<div th:replace="~{fragments/navigation :: footer}"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.bundle.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

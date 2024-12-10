@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/navigation :: head}"></head>
+<body>
+<div th:insert="~{fragments/navigation :: banner}"></div>
+
+<div class="container mt-5" >
+    <div class="intro">
+        <h1>New User</h1>
+        <p>Welcome to <b>PerScholas Capstone Hospital.</b></p>
+        <p>If this is your first time to this page, contact a staff to get an account set up for you</p>
+
+        <h1>Existing User</h1>
+        <p>If you are an existing user, you can log in to your account below.</p>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2>Login</h2>
+
+    <!-- Error Message -->
+    <div th:if="${param.error}" class="alert alert-danger">
+        Invalid username or password. Please try again.
+    </div>
+
+    <!-- Login Form -->
+    <form action="/login" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+<br><br><br>
+<div th:replace="~{fragments/navigation :: footer}"></div>
+</body>
+</html>

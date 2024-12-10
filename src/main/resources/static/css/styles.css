@@ -1,0 +1,108 @@
+
+/*
+body {
+    font-family: Arial, sans-serif;
+}
+
+main {
+    background-color: #E3F2FD;
+}
+.header-container {
+    background-color: #81b1e2;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    height: 50px;
+}
+
+.header-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.navbar-brand {
+    font-weight: bold; /* Bold title */
+/*    font-size: 1.5rem; /* Adjust font size */
+/*
+}
+
+.navbar {
+    padding: 10px 20px; /* Add some padding for better spacing */
+/*    border-bottom: 2px solid #ddd; /* Optional bottom border for separation */
+/*}
+*/
+
+
+/* Body Background */
+body {
+    background-color: #E3F2FD; /* Light Blue Background */
+    color: #212529; /* Dark Gray Text for readability */
+}
+
+.logo {
+    width: 50px; /* Adjust width */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 10px; /* Optional spacing between the image and text */
+    vertical-align: middle; /* Align the image with the text */
+}
+.header-text {
+    display: inline; /* Ensure text is on the same line as the image */
+    vertical-align: middle;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: #0D47A1; /* Navy Blue Header/Navigation */
+}
+
+.navbar a,
+.navbar-brand {
+    color: #FFFFFF !important; /* White Text for Nav */
+}
+
+.navbar a:hover {
+    color: #E3F2FD !important; /* Light Blue Hover for contrast */
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #0D47A1; /* Navy Blue Buttons */
+    border-color: #0D47A1;
+}
+
+.btn-primary:hover {
+    background-color: #083a75; /* Darker Navy Blue on Hover */
+}
+
+/* Cards */
+.card {
+    background-color: #FFFFFF; /* White Cards for contrast */
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+.footer {
+    background-color: #0D47A1; /* Navy Blue */
+    color: #FFFFFF; /* White */
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+.footer a {
+    color: #E3F2FD; /* Light Blue */
+    text-decoration: none;
+}
+.footer a:hover {
+    text-decoration: underline;
+}

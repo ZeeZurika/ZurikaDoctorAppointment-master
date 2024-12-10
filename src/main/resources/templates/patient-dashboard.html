@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<div th:insert="~{fragments/navigation :: banner}"></div>
+<div th:insert="~{fragments/navigation :: navbar}"></div>
+<div class="container mt-5">
+    <h1>Patient Dashboard</h1>
+
+    <!-- Success/Error Messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="patientTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="viewAppointmentsTab" data-bs-toggle="tab" href="#viewAppointments" role="tab">View Appointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="scheduleAppointmentTab" data-bs-toggle="tab" href="#scheduleAppointment" role="tab">Schedule Appointment</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="updateInfoTab" data-bs-toggle="tab" href="#updateInfo" role="tab">Update Information</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="patientTabsContent">
+        <!-- View Appointments -->
+        <div class="tab-pane fade show active" id="viewAppointments" role="tabpanel">
+            <h4>Your Appointments</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="appointment : ${appointments}">
+                    <td th:text="${appointment.id}"></td>
+                    <td th:text="${appointment.doctor.firstName + ' ' + appointment.doctor.lastName}"></td>
+                    <td th:text="${appointment.appointmentDate}"></td>
+                    <td th:text="${appointment.status}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/patient/dashboard(page=${currentPage - 1})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/patient/dashboard(page=${i})}" th:text="${i + 1}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/patient/dashboard(page=${currentPage + 1})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Schedule Appointment -->
+        <div class="tab-pane fade" id="scheduleAppointment" role="tabpanel">
+            <h4>Schedule a New Appointment</h4>
+            <form action="/patient/schedule" method="post">
+                <div class="mb-3">
+                    <label for="doctor" class="form-label">Select Doctor</label>
+                    <select class="form-select" id="doctor" name="doctorId" required>
+                        <option th:each="doctor : ${doctors}" th:value="${doctor.id}" th:text="${doctor.firstName + ' ' + doctor.lastName}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="appointmentDate" class="form-label">Select Date</label>
+                    <input type="datetime-local" class="form-control" id="appointmentDate" name="appointmentDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Schedule Appointment</button>
+            </form>
+        </div>
+
+        <!-- Update Information -->
+        <div class="tab-pane fade" id="updateInfo" role="tabpanel">
+            <h4>Update Your Information</h4>
+            <form action="/patient/updateInfo" method="post">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" th:value="${patient.firstName}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" th:value="${patient.lastName}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" th:value="${patient.email}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="New Password">
+                </div>
+                <button type="submit" class="btn btn-primary">Update Information</button>
+            </form>
+        </div>
+    </div>
+</div>
+<br><br><br>
+<div th:replace="~{fragments/navigation :: footer}"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+Appointments by Doctor:
+Doctor ID: 2, Doctor Name: FirstDoctor LastDoctor, Appointment Date: 2024-12-12T09:20, Status: CANCELED
+Doctor ID: 5, Doctor Name: Treat Treated, Appointment Date: 2024-12-05T20:13, Status: CONFIRMED
+Doctor ID: 2, Doctor Name: FirstDoctor LastDoctor, Appointment Date: 2024-12-06T00:11, Status: PENDING
+Doctor ID: 5, Doctor Name: Treat Treated, Appointment Date: 2024-12-30T10:20, Status: RESCHEDULED
