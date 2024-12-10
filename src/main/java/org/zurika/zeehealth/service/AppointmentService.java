@@ -18,24 +18,36 @@ public class AppointmentService {
     @Autowired
     private UserRepository userRepository;
 
-    // Get paginated appointments for a patient
+    // Get all appointments with pagination
+    public Page<Appointment> getAllAppointments(Pageable pageable) {
+        return appointmentRepository.findAll(pageable);
+    }
+
+    // Get appointments by status
+    public List<Appointment> getAppointmentsByStatus(String status) {
+        AppointmentStatus appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
+        return appointmentRepository.findByStatus(appointmentStatus);
+    }
+
+    // Get appointments by date range
+    public List<Appointment> getAppointmentsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return appointmentRepository.findByAppointmentDateBetween(startDate, endDate);
+    }
+
+    // Get appointments for a specific patient
     public Page<Appointment> getPatientAppointments(Long patientId, PageRequest pageRequest) {
         return appointmentRepository.findByPatientId(patientId, pageRequest);
     }
 
-    // Get all appointments for a doctor
-    public Page<Appointment> getDoctorAppointments(Long doctorId, PageRequest pageRequest) {
-        return appointmentRepository.findByDoctorId(doctorId, pageRequest);
+    // Get patient appointments filtered by status
+    public Page<Appointment> getPatientAppointmentsByStatus(Long patientId, String status, PageRequest pageRequest) {
+        AppointmentStatus appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
+        return appointmentRepository.findByPatientIdAndStatus(patientId, appointmentStatus, pageRequest);
     }
 
-    // Get paginated appointments for a patient filtered by status
-    public Page<Appointment> getPatientAppointmentsByStatus(Long patientId, String status, PageRequest pageRequest) {
-        try {
-            AppointmentStatus appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
-            return appointmentRepository.findByPatientIdAndStatus(patientId, appointmentStatus, pageRequest);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid status: " + status);
-        }
+    // Get doctor appointments
+    public Page<Appointment> getDoctorAppointments(Long doctorId, PageRequest pageRequest) {
+        return appointmentRepository.findByDoctorId(doctorId, pageRequest);
     }
 
     // Schedule a new appointment
@@ -58,6 +70,38 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
+    // Update appointment (for status and rescheduling)
+    public void updateAppointment(Long appointmentId, AppointmentStatus status, LocalDateTime newDate) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found!"));
+
+        appointment.setStatus(status);
+        if (status == AppointmentStatus.RESCHEDULED && newDate != null) {
+            if (newDate.isBefore(LocalDateTime.now())) {
+                throw new IllegalArgumentException("Rescheduled date must be in the future.");
+            }
+            appointment.setAppointmentDate(newDate);
+        }
+
+        appointmentRepository.save(appointment);
+    }
+
+    public void updateAppointmentStatus(Long appointmentId, String status) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found!"));
+
+        // Convert the string status to the AppointmentStatus enum
+        try {
+            AppointmentStatus appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
+            appointment.setStatus(appointmentStatus);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status value: " + status);
+        }
+
+        // Save the updated appointment
+        appointmentRepository.save(appointment);
+    }
+
     // Cancel an appointment
     public void cancelAppointment(Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
@@ -65,59 +109,8 @@ public class AppointmentService {
         appointment.setStatus(AppointmentStatus.CANCELED);
         appointmentRepository.save(appointment);
     }
-
-    // Update the status of an appointment
-    public void updateAppointmentStatus(Long appointmentId, AppointmentStatus status) {
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Appointment not found!"));
-        appointment.setStatus(status);
-        appointmentRepository.save(appointment); // Persist changes
-    }
-
-    // Reschedule an appointment
-    public void rescheduleAppointment(Long appointmentId, LocalDateTime newDate) {
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Appointment not found!"));
-        appointment.setAppointmentDate(newDate);
-        appointment.setStatus(AppointmentStatus.RESCHEDULED);
-        appointmentRepository.save(appointment);
-    }
-
-    // Get appointments within a specific date range
-    public List<Appointment> getAppointmentsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return appointmentRepository.findByAppointmentDateBetween(startDate, endDate);
-    }
-
-    // Get all appointments by status
-    public List<Appointment> getAppointmentsByStatus(String status) {
-        AppointmentStatus appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
-        return appointmentRepository.findByStatus(AppointmentStatus.valueOf(String.valueOf(appointmentStatus)));
-    }
-
-    // Get all appointments with page
-    public Page<Appointment> getAllAppointments(Pageable pageable) {
-        return appointmentRepository.findAll(pageable);
-    }
-
-    public void scheduleAppointment(Appointment appointment) {
-        User doctor = userRepository.findById(appointment.getDoctor().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Doctor not found!"));
-        User patient = userRepository.findById(appointment.getPatient().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Patient not found!"));
-
-        // Validate appointment date
-        if (appointment.getAppointmentDate().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Appointment date must be in the future.");
-        }
-
-        // Set additional attributes if necessary
-        appointment.setDoctor(doctor);
-        appointment.setPatient(patient);
-        appointment.setStatus(AppointmentStatus.PENDING); // Default status
-
-        // Save the appointment
-        appointmentRepository.save(appointment);
-    }
 }
+
+
 
 

@@ -56,7 +56,6 @@
                             </select>
                             <button type="submit" class="btn btn-primary mt-2">Update</button>
                         </form>
-
                     </td>
                 </tr>
                 </tbody>
@@ -72,8 +71,7 @@
                     <select class="form-select" id="appointmentId" name="appointmentId" required>
                         <option value="" disabled selected>Select an appointment</option>
                         <option th:each="appointment : ${appointments}" th:value="${appointment.id}"
-                                th:text="'Appointment with ' + ${appointment.patient.firstName} + ' ' + ${appointment.patient.lastName} + ' on ' + ${appointment.appointmentDate}">
-                        </option>
+                                th:text="'Appointment with ' + ${appointment.patient.firstName} + ' ' + ${appointment.patient.lastName} + ' on ' + ${appointment.appointmentDate}"></option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -85,7 +83,7 @@
                         <option value="RESCHEDULED">Reschedule</option>
                     </select>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" th:if="${status == 'RESCHEDULED'}">
                     <label for="newDate" class="form-label">New Date (for rescheduling)</label>
                     <input type="datetime-local" class="form-control" id="newDate" name="newDate">
                 </div>
