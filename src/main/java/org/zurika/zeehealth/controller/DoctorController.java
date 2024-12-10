@@ -69,16 +69,13 @@ public class DoctorController {
                                     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime newDate,
                                     RedirectAttributes redirectAttributes) {
         try {
-            // Convert string status to AppointmentStatus enum
-            AppointmentStatus appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
-
-            // Update the appointment (status and optionally reschedule)
-            appointmentService.updateAppointment(appointmentId, appointmentStatus, newDate);
-
+            // Validate and update appointment
+            appointmentService.updateAppointment(appointmentId, AppointmentStatus.valueOf(status), newDate);
             redirectAttributes.addFlashAttribute("successMessage", "Appointment updated successfully!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Invalid input: " + e.getMessage());
         }
         return "redirect:/doctor/dashboard";
     }
+
 }
